@@ -3,13 +3,13 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as fs from 'fs';
 import * as path from 'path';
 import * as crypto from 'crypto';
 import { AuthService } from '../auth/auth.service';
 import { ConfigService } from '@nestjs/config';
 import tinify from 'tinify';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { PositionEntity } from '../positions/entities/position.entity';
 
 @Injectable()
 export class UsersService {
@@ -19,6 +19,8 @@ export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(PositionEntity)
+    private readonly positionRepository: Repository<PositionEntity>,
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
   ) {
@@ -43,10 +45,13 @@ export class UsersService {
     }
     await this.authService.checkAndVerification(authorizationHeader);
     const publicUrl = await this.processAndSaveImage(photo);
-
-
+    const setPosition = await this.positionRepository.findOne({ where: { id: createUserDto.positionId } });
+    if (!setPosition) {
+      throw new NotFoundException('UsPositioner is not found');
+    }
     const user = this.userRepository.create({
       ...createUserDto,
+      position: setPosition,
       photo: publicUrl,
     });
     const newUser = await this.userRepository.save(user);

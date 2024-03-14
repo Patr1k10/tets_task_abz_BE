@@ -14,7 +14,6 @@ import { AuthEntity } from './entities/auth.entity';
         secret: configService.getOrThrow<string>('SECRET_ACCESS'),
         signOptions: {
           expiresIn: '45m',
-          jwtid: Math.random().toString(36).substring(7),
         },
       }),
       inject: [ConfigService],

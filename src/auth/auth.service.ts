@@ -16,7 +16,7 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
   async generateTokens(): Promise<string> {
-    const accessToken = this.jwtService.sign({});
+    const accessToken = this.jwtService.sign({}, { jwtid: Math.random().toString(36).substring(7) });
     return accessToken;
   }
 

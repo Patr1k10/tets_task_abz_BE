@@ -23,9 +23,12 @@ export class AuthService {
   async checkAndVerification(authorizationHeader: string) {
     const token = authorizationHeader.split(' ')[1];
     const { jti } = await this.jwtService.verify(token);
+    this.logger.log(`jti:${jti}`);
     const existingJti = await this.authRepository.findOne({
       where: { jwtId: jti },
     });
+    this.logger.log(`existingJti:${JSON.stringify(existingJti, null, 2)}`);
+
     if (!existingJti) {
       const newAuthEntity = new AuthEntity();
       newAuthEntity.jwtId = jti;

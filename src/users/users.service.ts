@@ -41,8 +41,9 @@ export class UsersService {
     if (existingUser) {
       throw new ConflictException('User with this phone or email already exist');
     }
-    const publicUrl = await this.processAndSaveImage(photo);
     await this.authService.checkAndVerification(authorizationHeader);
+    const publicUrl = await this.processAndSaveImage(photo);
+
 
     const user = this.userRepository.create({
       ...createUserDto,

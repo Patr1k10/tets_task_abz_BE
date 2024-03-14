@@ -11,7 +11,11 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
-  app.enableCors();
+  app.enableCors({
+    origin: configService.get('FRONTEND_ORIGIN'),
+    methods: configService.get('CRORS_METHODS'),
+    credentials: true,
+  });
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Test Task ABZ')
@@ -29,14 +33,10 @@ async function bootstrap() {
   const server = await app.listen(configService.getOrThrow('API_PORT'));
   const address = server.address();
   if (typeof address !== 'string') {
-    logger.log(
-      `The server is running at the address: http://localhost:${address.port}`,
-    );
+    logger.log(`The server is running at the address: http://localhost:${address.port}`);
     logger.log(`Swagger description: http://localhost:${address.port}/swagger`);
   } else {
-    logger.log(
-      `The server is running at the address: http://localhost:${address}`,
-    );
+    logger.log(`The server is running at the address: http://localhost:${address}`);
     logger.log(`Swagger description: http://localhost:${address}/swagger`);
   }
 }

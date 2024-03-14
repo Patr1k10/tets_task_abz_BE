@@ -2,6 +2,7 @@
 /dist
 /node_modules
 /build
+main_key.pem
 
 # Logs
 logs

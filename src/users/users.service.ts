@@ -58,8 +58,8 @@ export class UsersService {
     this.logger.log(JSON.stringify(users));
 
     const totalPages = Math.ceil(totalUsers / count);
-    const nextUrl = page < totalPages ? `http://localhost:3000/users?page=${page + 1}&count=${count}` : null;
-    const prevUrl = page > 1 ? `http://localhost:3000/users?page=${page - 1}&count=${count}` : null;
+    const nextUrl = page < totalPages ? `http://18.197.131.200:3000/users?page=${page + 1}&count=${count}` : null;
+    const prevUrl = page > 1 ? `http://18.197.131.200:3000/users?page=${page - 1}&count=${count}` : null;
 
     return {
       success: true,
